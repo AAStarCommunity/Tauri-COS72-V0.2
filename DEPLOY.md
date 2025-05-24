@@ -101,3 +101,7 @@ pnpm tauri build
    ```
 
 4. 重试构建 
+
+5. 清理空间:
+清理了Rust缓存: cargo clean 释放了 2.9GB 空间
+清理了node_modules: 重新安装依赖
