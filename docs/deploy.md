@@ -1,247 +1,132 @@
-# Deployment Guide
+# 部署指南
 
-## Prerequisites
+本文档提供了如何构建、测试和部署 COS72 Tauri + Next.js 应用的指南。
 
-- Node.js 23.0+ 
-- pnpm (latest version)
-- Rust (latest stable)
-- Tauri CLI 2.0+
+## 环境要求
 
-## Installation and Setup
+- Node.js v23.0.0 或更高版本
+- Rust 1.70.0 或更高版本
+- pnpm 10.0.0 或更高版本
+- Tauri CLI 2.0.0 或更高版本
 
-### 1. Install Dependencies
+## 初始化
+
+首先，克隆仓库并安装依赖：
 
 ```bash
-# Install Node.js dependencies
+# 克隆仓库
+git clone <repository-url>
+cd Tauri-COS72-V0.2
+
+# 安装依赖
 pnpm install
-
-# Install Tauri CLI (if not already installed)
-pnpm add -D @tauri-apps/cli@next
 ```
 
-### 2. Environment Setup
+## 开发流程
 
-Ensure you have the following tools installed:
+### 开发模式
 
-- [Node.js 23.0+](https://nodejs.org/)
-- [Rust](https://rustup.rs/)
-- [pnpm](https://pnpm.io/installation)
-
-## Development
-
-### Start Development Server
+在开发模式下运行应用程序：
 
 ```bash
-# Start Tauri development mode (opens desktop app)
 pnpm tauri dev
-
-# Or start only Next.js dev server (web browser)
-pnpm dev
 ```
 
-The development server will:
-- Start Next.js frontend on http://localhost:3000
-- Launch Tauri desktop application
-- Enable hot reload for both frontend and Rust code
+这将启动 Next.js 开发服务器并打开 Tauri 窗口，加载应用程序。
 
-## Testing
+### 测试
 
-### Frontend Testing
+运行测试：
 
 ```bash
-# Build Next.js application
+# 前端测试
+pnpm test
+
+# Rust 测试
+cd src-tauri && cargo test
+```
+
+## 构建应用程序
+
+### 构建发布版本
+
+构建可分发的应用程序包：
+
+```bash
+# 构建前端
 pnpm build
 
-# Start production server
-pnpm start
-```
-
-### Tauri Testing
-
-```bash
-# Build Tauri application for testing
-pnpm tauri build --debug
-
-# Run Rust tests
-cd src-tauri
-cargo test
-```
-
-## Building for Production
-
-### Development Build
-
-```bash
-# Build for development (faster, includes debug symbols)
-pnpm tauri build --debug
-```
-
-### Release Build
-
-```bash
-# Build optimized release version
+# 构建Tauri应用
 pnpm tauri build
 ```
 
-This will create:
-- **macOS**: `.app` bundle and `.dmg` installer in `src-tauri/target/release/bundle/`
-- **Windows**: `.exe` and `.msi` installer
-- **Linux**: `.AppImage` and `.deb` packages
+构建完成后，可以在以下位置找到构建的应用程序：
 
-## Distribution
+- Windows: `src-tauri/target/release/bundle/msi/`
+- macOS: `src-tauri/target/release/bundle/dmg/`
+- Linux: `src-tauri/target/release/bundle/appimage/` 或 `src-tauri/target/release/bundle/deb/`
 
-### macOS
+## 发布步骤
 
-The build generates:
-- `COS72-tauri.app` - Application bundle
-- `COS72-tauri_[version]_aarch64.dmg` - Disk image for distribution
+1. 更新版本号：
+   - 在 `package.json` 中更新 `version` 字段
+   - 在 `src-tauri/Cargo.toml` 中更新 `version` 字段
+   - 在 `src-tauri/tauri.conf.json` 中更新 `version` 字段
+   - 在 `src/components/AboutDialog.tsx` 中更新版本显示
 
-### Code Signing (macOS)
+2. 更新变更日志：
+   - 在 `docs/CHANGES.md` 中记录变更
 
-For distribution outside the App Store:
-
-```bash
-# Sign the application
-codesign --force --deep --sign "Developer ID Application: Your Name" "src-tauri/target/release/bundle/macos/COS72-tauri.app"
-
-# Create signed DMG
-hdiutil create -srcfolder "src-tauri/target/release/bundle/macos/COS72-tauri.app" -volname "COS72" -fs HFS+ -fsargs "-c c=64,a=16,e=16" -format UDZO -size 200m "COS72-signed.dmg"
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Build Errors**: Clear cache and rebuild
+3. 构建应用程序：
    ```bash
-   rm -rf .next node_modules src-tauri/target
-   pnpm install
+   pnpm build
    pnpm tauri build
    ```
 
-2. **Rust Compilation Issues**: Update Rust
+4. 测试构建的应用程序
+
+5. 发布新版本
+
+## 故障排除
+
+如果在构建过程中遇到问题，请尝试以下步骤：
+
+1. 清理临时文件：
    ```bash
-   rustup update
+   pnpm clean
    ```
 
-3. **Node.js Issues**: Clear node_modules
+2. 重新安装依赖：
    ```bash
    rm -rf node_modules
    pnpm install
    ```
 
-4. **"asset not found: index.html" Error in DMG**: This occurs when Next.js static export fails
+3. 删除 Rust 构建缓存：
    ```bash
-   # Check if dist directory exists and contains index.html
-   ls -la dist/
-   
-   # If missing, ensure Next.js config is correct
-   # Remove conflicting config files
-   rm next.config.js  # Keep only next.config.ts
-   
-   # Rebuild frontend
-   rm -rf dist
-   pnpm build
-   
-   # Verify static export worked
-   ls -la dist/index.html
-   
-   # Then rebuild Tauri
-   pnpm tauri build
+   cd src-tauri && cargo clean
    ```
 
-5. **Next.js Configuration Conflicts**: Only use one config file
-   - Keep `next.config.ts` for static export configuration
-   - Remove `next.config.js` to avoid conflicts
-   - Ensure `output: "export"` and `distDir: "dist"` are set
+4. 重试构建
 
-### Version Verification
+## 版本管理
 
-```bash
-# Check versions
-node --version    # Should be 23.0+
-pnpm --version   # Latest version
-rustc --version  # Latest stable
-pnpm tauri --version  # Should be 2.0+
-```
+当前版本：0.13.0
 
-## Continuous Integration
+版本号更新规则：
+- 主要功能更新：递增0.01 (例如：0.13.0 -> 0.14.0)
+- 小功能或修复：递增0.0.1 (例如：0.13.0 -> 0.13.1)
 
-### GitHub Actions Example
+## 技术栈
 
-Create `.github/workflows/build.yml`:
+- **前端**: Next.js 15.3.2, React 19.1.0, TailwindCSS 4.1.7
+- **后端**: Tauri 2.0, Rust Latest
+- **包管理**: pnpm 10.0+
+- **构建工具**: Tauri CLI 2.0
 
-```yaml
-name: Build and Release
+## 特性
 
-on:
-  push:
-    tags: ['v*']
-
-jobs:
-  build:
-    strategy:
-      matrix:
-        platform: [macos-latest, ubuntu-latest, windows-latest]
-    
-    runs-on: ${{ matrix.platform }}
-    
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '23'
-        
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: latest
-        
-    - name: Setup Rust
-      uses: dtolnay/rust-toolchain@stable
-      
-    - name: Install dependencies
-      run: pnpm install
-      
-    - name: Build Tauri app
-      run: pnpm tauri build
-```
-
-## Manual Testing Checklist
-
-Before deployment, test these features:
-
-- [ ] Application launches successfully
-- [ ] All navigation links work
-- [ ] Demo page communication functions work
-- [ ] Hardware info detection works
-- [ ] Calculator functionality operates correctly
-- [ ] Event system sends and receives messages
-- [ ] All pages render without errors
-- [ ] UI is responsive on different screen sizes
-
-## Project Structure
-
-```
-tauri-nextjs-template/
-├── src/                 # Next.js frontend source
-│   ├── app/            # Next.js app router pages
-│   └── components/     # React components
-├── src-tauri/          # Tauri Rust backend
-│   ├── src/            # Rust source code
-│   └── Cargo.toml      # Rust dependencies
-├── docs/               # Project documentation
-└── package.json        # Node.js dependencies
-```
-
-## Release Process
-
-1. Update version in `package.json`
-2. Update `CHANGES.md` with new features
-3. Test all functionality
-4. Build release version: `pnpm tauri build`
-5. Test built application
-6. Create GitHub release with artifacts
-7. Update documentation as needed 
+- About对话框显示系统信息
+- 响应式窗口设计
+- 跨平台支持
+- 现代化UI界面 

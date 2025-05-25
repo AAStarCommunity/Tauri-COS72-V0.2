@@ -10,6 +10,39 @@ fn greet() -> String {
   format!("Hello world from Rust! Current epoch: {}", epoch_ms)
 }
 
+// System info for About dialog
+#[derive(serde::Serialize)]
+struct SystemInfo {
+  os: String,
+  arch: String,
+  version: String,
+  kernel_version: Option<String>,
+}
+
+#[tauri::command]
+fn get_system_info() -> Result<SystemInfo, String> {
+  let os_name = sysinfo::System::name().unwrap_or_else(|| "Unknown".to_string());
+  let os_version = sysinfo::System::os_version().unwrap_or_else(|| "Unknown".to_string());
+  let kernel_version = sysinfo::System::kernel_version();
+  
+  let arch = if cfg!(target_arch = "x86_64") {
+    "x86_64"
+  } else if cfg!(target_arch = "aarch64") {
+    "arm64"
+  } else if cfg!(target_arch = "x86") {
+    "x86"
+  } else {
+    "Unknown"
+  };
+  
+  Ok(SystemInfo {
+    os: os_name,
+    arch: arch.to_string(),
+    version: os_version,
+    kernel_version,
+  })
+}
+
 // 添加获取硬件配置的函数
 #[derive(serde::Serialize)]
 struct HardwareInfo {
@@ -143,7 +176,7 @@ pub fn run() {
   tauri::Builder::default()
     .plugin(tauri_plugin_opener::init())
     .manage(Database {})
-    .invoke_handler(tauri::generate_handler![greet, calculate, start_process_monitoring, get_hardware_info])
+    .invoke_handler(tauri::generate_handler![greet, calculate, start_process_monitoring, get_hardware_info, get_system_info])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

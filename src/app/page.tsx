@@ -1,10 +1,13 @@
 "use client";
 import { RoundedButton } from "@/components/RoundedButton";
+import AboutDialog from "@/components/AboutDialog";
 import Image from "next/image";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import Link from "next/link";
 
 export default function Home() {
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
+
   // Simulate login functionality
   const handleLogin = useCallback((): void => {
     // Here should call Tauri API for login authentication
@@ -13,6 +16,25 @@ export default function Home() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Header with About button */}
+      <div className="flex justify-between items-center mb-8">
+        <div className="flex items-center gap-4">
+          <Image 
+            src="/logo.png" 
+            alt="COS72 Logo" 
+            width={40}
+            height={40}
+            className="rounded-lg"
+          />
+          <h1 className="text-2xl font-bold">COS72</h1>
+        </div>
+        <button
+          onClick={() => setIsAboutOpen(true)}
+          className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+        >
+          About
+        </button>
+      </div>
       <section className="flex flex-col md:flex-row gap-8 items-center mb-16">
         <div className="flex-1">
           <h1 className="text-4xl font-bold mb-4">Welcome to COS72 Community Tool</h1>
@@ -98,6 +120,12 @@ export default function Home() {
           disabled={false}
         />
       </section>
+
+      {/* About Dialog */}
+      <AboutDialog 
+        isOpen={isAboutOpen} 
+        onClose={() => setIsAboutOpen(false)} 
+      />
     </div>
   );
 }

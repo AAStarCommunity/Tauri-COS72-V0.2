@@ -1,5 +1,55 @@
 # 变更记录
 
+## 版本 0.13.0 - 2024-12-23
+
+### 新增功能
+
+1. 添加About对话框功能
+   - 创建AboutDialog组件，显示应用版本、构建信息、系统信息等
+   - 参考Cursor的About界面设计，包含版本号、构建日期、平台信息、技术栈等
+   - 在主页面添加About按钮，点击打开About对话框
+   - 集成logo.png到About对话框和应用头部
+
+2. 文档整理和组织
+   - 将所有相关文档移动到docs目录下统一管理
+   - 合并重复的deploy.md文档
+   - 保持文档结构清晰，便于维护
+
+3. 应用窗口优化
+   - 调整应用窗口大小，PC端使用1200x800分辨率，设置最小尺寸800x600
+   - 添加窗口居中显示和禁用最大化功能
+   - 为移动端适配预留配置空间
+
+4. 版本号统一更新
+   - 统一更新package.json、Cargo.toml、tauri.conf.json中的版本号到0.13.0
+   - 确保版本号一致性，便于发布管理
+
+### 修改文件
+
+- `src/components/AboutDialog.tsx`: 新增About对话框组件
+- `src-tauri/src/lib.rs`: 添加get_system_info函数获取系统信息
+- `src/app/page.tsx`: 添加About按钮和对话框集成
+- `src-tauri/tauri.conf.json`: 更新版本号和窗口配置
+- `package.json`: 更新版本号到0.13.0
+- `src-tauri/Cargo.toml`: 更新版本号到0.13.0
+- `docs/`: 移动所有文档到docs目录统一管理
+
+### 初始化与运行指令
+
+```bash
+# 安装依赖
+pnpm install
+
+# 开发模式运行
+pnpm tauri dev
+
+# 构建发布版本
+pnpm tauri build
+
+# 测试
+pnpm test
+```
+
 ## 版本 0.3.4 - 2024-07-22
 
 ### 修复构建问题
@@ -214,6 +264,40 @@ pnpm tauri build
 - `src/app/page.tsx`: 更新前端界面，添加计算器和事件监听组件
 - `PLAN.md`: 创建项目开发计划
 - `CHANGES.md`: 创建变更记录
+
+### 初始化与运行指令
+
+```bash
+# 安装依赖
+pnpm install
+
+# 开发模式运行
+pnpm tauri dev
+
+# 构建发布版本
+pnpm tauri build
+```
+
+## 版本 0.14.0 - 2024-12-19
+
+### 新增功能
+
+1. 集成 Stagewise 开发工具
+   - 安装 `@stagewise/toolbar-next` 包用于 AI 驱动的界面编辑功能
+   - 创建 `StagewiseToolbar` 组件，仅在开发模式下运行
+   - 在根布局中集成工具栏，不影响生产构建
+
+### 修改文件
+
+- `package.json`: 添加 `@stagewise/toolbar-next` 开发依赖
+- `src/components/StagewiseToolbar.tsx`: 新增 stagewise 工具栏组件
+- `src/app/layout.tsx`: 在根布局中集成工具栏
+
+### 功能说明
+
+- stagewise 工具栏可以让开发者在浏览器中选择元素，留下评论，并让 AI 代理基于上下文进行代码修改
+- 工具栏仅在开发环境下运行，不会包含在生产构建中
+- 使用动态导入确保生产包不会包含开发工具代码
 
 ### 初始化与运行指令
 
