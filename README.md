@@ -12,7 +12,7 @@ Create your app in seconds:MacOS，Windows，Linux, Android, iOS and Web page.
 ### 2. Implemente three kind of commmunication
 Create your sercice in different way: command call, auto sync and front invoke.
 
-[小结](COMMUNICATION.md)
+[小结](docs/COMMUNICATION.md)
 模版算0.11版本,从本repo开始算0.12版,完成几个核心功能:
 合约配置和交互\本地数据库和文件服务\多版本打包测试. 
 
