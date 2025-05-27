@@ -19,8 +19,8 @@ Create your sercice in different way: command call, auto sync and front invoke.
 本repo不涉及具体业务功能,仅仅做技术准备,任何项目都可以使用本repo构建任何跨平台应用.
 
 ## Develping features
-## 3. Interact with on-chain contract/合约配置和交互
+### 3. Interact with on-chain contract/合约配置和交互
 
-## 4. 本地数据库和文件服务
+### 4. 本地数据库和文件服务
 
-## 5. 多版本打包脚本
+### 5. 多版本打包脚本
