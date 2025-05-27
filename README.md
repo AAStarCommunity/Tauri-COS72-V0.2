@@ -7,9 +7,9 @@
 <img src="https://raw.githubusercontent.com/jhfnetboy/MarkDownImg/main/img/202406091522004.png" width="40%"></img>
 - 我们已经完成了基础的模版改进,验证了多种模式的前后端通信功能，最初模板来源：[Template](https://github.com/jhfnetboy/COS72-tauri-nextjs-template)
 ## Features
-### Quickly onekey tauri template
+### 1. Quickly onekey tauri template
 Create your app in seconds:MacOS，Windows，Linux, Android, iOS and Web page.
-### Implemente three kind of commmunication
+### 2. Implemente three kind of commmunication
 Create your sercice in different way: command call, auto sync and front invoke.
 
 [小结](COMMUNICATION.md)
@@ -18,9 +18,9 @@ Create your sercice in different way: command call, auto sync and front invoke.
 
 本repo不涉及具体业务功能,仅仅做技术准备,任何项目都可以使用本repo构建任何跨平台应用.
 
+## Develping features
+## 3. Interact with on-chain contract/合约配置和交互
 
-## 合约配置和交互
+## 4. 本地数据库和文件服务
 
-## 本地数据库和文件服务
-
-## 多版本打包测试.
+## 5. 多版本打包脚本
