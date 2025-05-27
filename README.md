@@ -5,8 +5,7 @@
 
 - Logo
 <img src="https://raw.githubusercontent.com/jhfnetboy/MarkDownImg/main/img/202406091522004.png" width="40%"></img>
-- 我们已经完成了基础的模版改进,验证了多种模式的前后端通信功能.
-[Template](https://github.com/jhfnetboy/COS72-tauri-nextjs-template)
+- 我们已经完成了基础的模版改进,验证了多种模式的前后端通信功能，最初模板来源：[Template](https://github.com/jhfnetboy/COS72-tauri-nextjs-template)
 ## Features
 ### Quickly onekey tauri template
 Create your app in seconds:MacOS，Windows，Linux, Android, iOS and Web page.
